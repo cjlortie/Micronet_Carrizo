@@ -1,0 +1,52 @@
+---
+title: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Weather station cleaner
+
+### Data
+```{r}
+library(tidyverse)
+library(lubridate)
+library(weathermetrics)
+library(skimr)
+data <- read_csv("data/hourly_station_18-19.csv")
+data <- data %>%
+  rename(date = Date, julien_day = Jul, hour = 'Hour (PST)', temp = 'Air Temp (F)', weather_station_ID = 'Stn Id', weather_station = 'Stn Name', RH = 'Rel Hum (%)') %>%
+  select(date, julien_day, hour, temp, weather_station, RH)
+
+data <-  data %>%
+  mutate(dates = mdy(date)) %>%
+  mutate(year = year(dates), month = month(dates), day = day(dates)) %>%
+  mutate(hour = as.numeric(hour)/100) %>%
+  mutate(temp = fahrenheit.to.celsius(temp, round = 2)) %>%
+  mutate(site = "Panoche", sensor = "station", microsite = "site", lat = -120.867, long = 37.0563) %>%
+filter(!is.na(year))
+
+#data$site <- rep("Panoche")
+#data$sensor <- rep("station")
+#data$microsite <- rep("site")
+#data$lat <- rep(-120.867)
+#data$long <- rep(37.0563)
+
+data <- data %>%
+  select(site, sensor, year, month, day, hour, microsite, temp, RH)
+skim(data)
+#write_csv(data, "data/weather_station_18-19.csv")
+
+#join different year scrapes
+yr_set1 <- read_csv("data/weather_station_14-17.csv")
+yr_set2 <- read_csv("data/weather_station_18-19.csv")
+compiled_data <- bind_rows(yr_set1, yr_set2)
+#write_csv(compiled_data, "data/Panoche_climate_2014-2019.csv")
+skim(compiled_data)
+
+#check length yr*days*hours
+
+```
+
