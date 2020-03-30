@@ -33,7 +33,7 @@ data %>%
   skim()
 
 #write
-#saveRDS(data, file = "data/Mojave_micronet.rds")
-#test <- readRDS(file = "data/Mojave_micronet.rds")
-#write_csv(data, "data/Mojave_micronet.csv")
+#saveRDS(data, file = "data/Carrizo_micronet.rds")
+#test <- readRDS(file = "data/Carrizo_micronet.rds")
+write_csv(data, "data/Carrizo_micronet.csv")
 ```
